@@ -35,4 +35,8 @@ public class SoftwareEngineerController {
         softwareEngineerService.insertSoftwareEngineer(softwareEngineer);
     }
 
+    @DeleteMapping("{id}")
+    public void deleteSoftwareEngineer(@PathVariable Integer id) {
+        softwareEngineerService.deleteSoftwareEngineer(id);
+    }
 }
