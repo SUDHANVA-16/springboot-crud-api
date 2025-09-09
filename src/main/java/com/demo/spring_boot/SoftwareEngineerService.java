@@ -9,9 +9,13 @@ import java.util.List;
 public class SoftwareEngineerService {
 
     private final SoftwareEngineerRepository softwareEngineerRepository;
+    private final AiService aiService;
 
-    public SoftwareEngineerService(SoftwareEngineerRepository softwareEngineerRepository) {
+    public SoftwareEngineerService(
+            SoftwareEngineerRepository softwareEngineerRepository, AiService aiService
+    ) {
         this.softwareEngineerRepository = softwareEngineerRepository;
+        this.aiService = aiService;
     }
 
     public List<SoftwareEngineer> getAllSoftwareEngineers() {
@@ -21,6 +25,15 @@ public class SoftwareEngineerService {
     }
 
     public void insertSoftwareEngineer(SoftwareEngineer softwareEngineer) {
+        String prompt = """
+                Based on the tech stack %s that %s has given
+                Provide a full learning path and recommendations for this person
+                """.formatted(
+                        softwareEngineer.getTechstack(),
+                        softwareEngineer.getName()
+        );
+        String chatResponse = aiService.chat(prompt);
+        softwareEngineer.setLearningPath(chatResponse);
         softwareEngineerRepository.save(softwareEngineer);
     }
 

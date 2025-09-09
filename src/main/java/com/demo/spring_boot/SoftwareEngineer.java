@@ -1,9 +1,6 @@
 package com.demo.spring_boot;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
@@ -16,13 +13,17 @@ public class SoftwareEngineer {
     private String name;
     private String techstack;
 
+    @Column(columnDefinition = "TEXT")
+    private String learningPath;
+
     public SoftwareEngineer() {
     }
 
-    public SoftwareEngineer(Integer id, String name, String techstack) {
+    public SoftwareEngineer(Integer id, String name, String techstack, String learningPath) {
         this.id = id;
         this.name = name;
         this.techstack = techstack;
+        this.learningPath = learningPath;
     }
 
     public Integer getId() {
@@ -45,27 +46,33 @@ public class SoftwareEngineer {
         return techstack;
     }
 
-    public void setTechstack(String techstack) {
+    public void setTechstack(String techstack){
         this.techstack = techstack;
     }
 
+    public String getLearningPath() {
+        return learningPath;
+    }
+
+    public void setLearningPath(String learningPath) {
+        this.learningPath = learningPath;
+    }
+
     /*
-    equals override to check if it is same as current value
-    this is current value
-    that is next or to be compared value
+     equals override to check if it is same as current value
+     this is current value
+     that is next or to be compared value
     */
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         SoftwareEngineer that = (SoftwareEngineer) o;
-        return  Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(techstack, that.techstack);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(techstack, that.techstack) && Objects.equals(learningPath, that.learningPath);
     }
 
-    //always contains hash method to pass
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, techstack);
+        return Objects.hash(id, name, techstack, learningPath);
     }
 }
