@@ -24,7 +24,7 @@ public class SoftwareEngineerService {
         return softwareEngineerRepository.findAll();
     }
 
-    public void insertSoftwareEngineer(SoftwareEngineer softwareEngineer) {
+    public SoftwareEngineer insertSoftwareEngineer(SoftwareEngineer softwareEngineer) {
         String prompt = """
                 Based on the tech stack %s that %s has given
                 Provide a full learning path and recommendations for this person
@@ -34,31 +34,29 @@ public class SoftwareEngineerService {
         );
         String chatResponse = aiService.chat(prompt);
         softwareEngineer.setLearningPath(chatResponse);
-        softwareEngineerRepository.save(softwareEngineer);
+        return softwareEngineerRepository.save(softwareEngineer);
     }
 
     public SoftwareEngineer getSoftwareEngineerById(Integer id) {
-        return softwareEngineerRepository.findById(id).orElseThrow(() -> new IllegalStateException(
-                id + "not found" ));
+        return softwareEngineerRepository.findById(id)
+                .orElseThrow(() -> new SoftwareEngineerNotFoundException(id));
     }
 
     public void deleteSoftwareEngineer(Integer id) {
         boolean exists = softwareEngineerRepository.existsById(id);
         if (!exists) {
-            throw new IllegalStateException(
-                    id + " not found"
-            );
+            throw new SoftwareEngineerNotFoundException(id);
         }
         softwareEngineerRepository.deleteById(id);
     }
 
-    public void updateSoftwareEngineer(Integer id, SoftwareEngineer update){
+    public SoftwareEngineer updateSoftwareEngineer(Integer id, SoftwareEngineer update) {
         SoftwareEngineer softwareEngineer = softwareEngineerRepository.findById(id)
-                .orElseThrow(()-> new IllegalStateException(
-                        id + "not found"));
+                .orElseThrow(() -> new SoftwareEngineerNotFoundException(id));
+
         softwareEngineer.setName(update.getName());
         softwareEngineer.setTechstack(update.getTechstack());
-        softwareEngineerRepository.save(softwareEngineer);
 
+        return softwareEngineerRepository.save(softwareEngineer);
     }
 }

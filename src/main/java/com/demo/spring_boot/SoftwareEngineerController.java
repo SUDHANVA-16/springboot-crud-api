@@ -1,5 +1,7 @@
 package com.demo.spring_boot;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,29 +21,35 @@ public class SoftwareEngineerController {
 
     //GET method
     @GetMapping
-    public List<SoftwareEngineer> getEngineers() {
-        return softwareEngineerService.getAllSoftwareEngineers();
+    public ResponseEntity<List<SoftwareEngineer>> getEngineers() {
+        return ResponseEntity.ok(softwareEngineerService.getAllSoftwareEngineers());
     }
 
     @GetMapping("{id}")
-    public SoftwareEngineer getEngineerByID(@PathVariable Integer id) {
-        return softwareEngineerService.getSoftwareEngineerById(id);
+    public ResponseEntity<SoftwareEngineer> getEngineerByID(@PathVariable Integer id) {
+        return ResponseEntity.ok(softwareEngineerService.getSoftwareEngineerById(id));
     }
 
     @PostMapping
-    public void addNewSoftwareEngineer(
+    public ResponseEntity<SoftwareEngineer> addNewSoftwareEngineer(
             @RequestBody SoftwareEngineer softwareEngineer
     ) {
-        softwareEngineerService.insertSoftwareEngineer(softwareEngineer);
+        SoftwareEngineer created = softwareEngineerService.insertSoftwareEngineer(softwareEngineer);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @DeleteMapping("{id}")
-    public void deleteSoftwareEngineer(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteSoftwareEngineer(@PathVariable Integer id) {
         softwareEngineerService.deleteSoftwareEngineer(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("{id}")
-    public void updateSoftwareEngineer(@PathVariable Integer id, @RequestBody SoftwareEngineer softwareEngineer) {
-        softwareEngineerService.updateSoftwareEngineer(id, softwareEngineer);
+    public ResponseEntity<SoftwareEngineer> updateSoftwareEngineer(
+            @PathVariable Integer id,
+            @RequestBody SoftwareEngineer softwareEngineer
+    ) {
+        SoftwareEngineer updated = softwareEngineerService.updateSoftwareEngineer(id, softwareEngineer);
+        return ResponseEntity.ok(updated);
     }
 }
